@@ -17,7 +17,10 @@
   校验工具名后转成真正的工具调用。
 - **模型自动发现**：`GET /models`（OpenAI）与 `GET /api/tags`（Ollama），
   并注册 `registerModelDiscovery` 供设置页使用。
-- **可视化配置**：注册可配置 provider，插件页与「设置 → 模型」页均有图形配置界面。
+- **可视化界面**：注册可配置 provider，插件页与「设置 → 模型」页均有图形配置界面。
+- **自带客户端 UI**：浏览器半身（`lib/client.js`）向 `settings.models.provider-card` 槽位
+  （keyed，key = `dsh-local-model`）注册「本地模型连接测试」卡片，可一键验证本地服务连通性
+  并列出可用模型。手写 Lazy-CJS bundle，零打包依赖。
 - **热更新**：配置字段全部 volatile，修改后无需重启。
 
 [1.0.0]: https://github.com/your-github-username/dsh-local-model/releases/tag/v1.0.0

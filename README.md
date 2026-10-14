@@ -36,7 +36,8 @@ DeepSeek Harness 默认走 DeepSeek 云端模型。本插件注册一个自定�
 - 🩹 **文本工具调用兜底** —— 部分本地模型（如 `qwen2.5-coder`）会把工具调用写成纯文本 JSON，插件会自动识别并转成真正的工具调用。
 - 🔍 **模型自动发现** —— 自动从本地端点拉取模型列表（Ollama `/api/tags`、OpenAI `/v1/models`）。
 - ⚡ **热更新** —— 所有配置字段都是 volatile，改完无需重启。
-- 🖥️ **可视化配置** —— 在 Harness 的**插件页**和**设置 → 模型**页都有图形界面，不用手改配置文件。
+- 🖥️ **可视化界面** —— 自带浏览器端 UI：在「设置 → 模型」的 **Local Model** 卡片里可直接
+  **测试连接**并列出本机可用模型；插件配置也在图形界面里完成，无需手改配置文件。
 
 ## 支持的本地后端
 
@@ -134,6 +135,31 @@ dsh plugin --profile web add dsh-local-model
   { "id": "qwen2.5-coder:14b", "name": "Qwen2.5-Coder 14B", "contextWindow": 32768, "maxTokens": 4096 }
 ]
 ```
+
+## 可视化界面
+
+插件包含一个浏览器端半身（`lib/client.js`），它向「设置 → 模型」页的 provider 卡片扩展槽位
+`settings.models.provider-card`（keyed，key = `dsh-local-model`）注册一张卡片：
+
+```
+┌─ 本地模型连接测试 ─────────────────────────────────┐
+│ provider: local · 名称: Local Model · 已配置: 是    │
+│ 协议  [ openai（OpenAI 兼容） ▾ ]                   │
+│ 端点  [ http://localhost:11434/v1 ]  [ 测试连接 ]   │
+│ ✅ 连接成功，发现 4 个模型                           │
+│ (qwen3-coder:30b) (llama3.1:8b) …                   │
+└────────────────────────────────────────────────────┘
+```
+
+- 切换 `openai` / `ollama` 协议会自动填入对应的默认端点；
+- 「测试连接」分别请求 `/models` 或 `/api/tags`，直接显示可用模型列表；
+- 失败时给出可操作的提示（服务未启动 / 地址错误 / CORS 跨域）。
+
+> 该卡片只做连通性验证；**api / baseURL / apiKey 等配置仍由上方「编辑」按钮的配置表单负责**（由插件
+> 的 `Config` schema 自动渲染）。
+
+客户端半身是**手写的 Lazy-CJS bundle**（`window.__ModuleLoader__.load({ id, factory })`），
+只依赖平台模块表里的 `react`，不需要任何打包步骤、也不需要 `dsh.client.external`。
 
 ## 常见问题
 
