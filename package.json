@@ -16,15 +16,15 @@
     "openai-compatible",
     "llm-adapter"
   ],
-  "author": "your-github-username",
+  "author": "songzhiyin <916924575@qq.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/your-github-username/dsh-local-model.git"
+    "url": "git+https://github.com/songzhiyin/dsh-local-model.git"
   },
-  "homepage": "https://github.com/your-github-username/dsh-local-model#readme",
+  "homepage": "https://github.com/songzhiyin/dsh-local-model#readme",
   "bugs": {
-    "url": "https://github.com/your-github-username/dsh-local-model/issues"
+    "url": "https://github.com/songzhiyin/dsh-local-model/issues"
   },
   "type": "module",
   "main": "lib/index.js",

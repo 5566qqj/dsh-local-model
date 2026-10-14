@@ -71,14 +71,14 @@ dsh plugin --profile web add dsh-local-model
 ### 方式 C：从 GitHub 安装
 
 ```bash
-dsh plugin --profile web add github:<your-github-username>/dsh-local-model
+dsh plugin --profile web add github:<songzhiyin>/dsh-local-model
 ```
 
 ### 方式 D：手动安装（无需发布）
 
 ```bash
 # 1. 克隆到 profile 之外任意目录
-git clone https://github.com/your-github-username/dsh-local-model.git
+git clone https://github.com/songzhiyin/dsh-local-model.git
 
 # 2. 在 profile 里把它作为本地 link 安装
 cd ~/.dsh/profiles/desktop
@@ -194,7 +194,7 @@ dsh plugin --profile web add dsh-local-model
 ## 开发与发布
 
 ```bash
-git clone https://github.com/your-github-username/dsh-local-model.git
+git clone https://github.com/songzhiyin/dsh-local-model.git
 cd dsh-local-model
 
 # 本地 link 到你的 DSH profile 做开发（改代码即时生效）

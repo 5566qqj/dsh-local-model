@@ -23,4 +23,4 @@
   并列出可用模型。手写 Lazy-CJS bundle，零打包依赖。
 - **热更新**：配置字段全部 volatile，修改后无需重启。
 
-[1.0.0]: https://github.com/your-github-username/dsh-local-model/releases/tag/v1.0.0
+[1.0.0]: https://github.com/songzhiyin/dsh-local-model/releases/tag/v1.0.0
