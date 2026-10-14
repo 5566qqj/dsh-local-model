@@ -43,8 +43,8 @@ DeepSeek Harness 默认走 DeepSeek 云端模型。本插件注册一个自定�
 
 | 后端 | `api` | `baseURL` |
 | --- | --- | --- |
-| **Ollama（原生，推荐）** | `ollama` | `http://localhost:11434` |
-| **Ollama（OpenAI 端点）** | `openai` | `http://localhost:11434/v1` |
+| **Ollama（原生，推荐）** | `ollama` | `http://127.0.0.1:11434` |
+| **Ollama（OpenAI 端点）** | `openai` | `http://127.0.0.1:11434/v1` |
 | **LM Studio** | `openai` | `http://localhost:1234/v1` |
 | **llama.cpp server** | `openai` | `http://localhost:8080/v1` |
 | **vLLM / SGLang** | `openai` | `http://localhost:8000/v1` |
@@ -105,7 +105,7 @@ dsh plugin --profile web add dsh-local-model
 
 然后在 Harness 里：
 
-1. **设置 → 模型** → 找到 **Local Model** provider，确认端点（默认 `http://localhost:11434/v1`）；
+1. **设置 → 模型** → 找到 **Local Model** provider，确认端点（默认 `http://127.0.0.1:11434/v1`）；
 2. 打开任意会话，在**模型选择器**里把 provider 切到 **Local Model**，选一个模型；
 3. 直接开始对话即可 —— 全程本地推理。
 
@@ -119,7 +119,7 @@ dsh plugin --profile web add dsh-local-model
 | 字段 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `api` | `"openai" \| "ollama"` | `"openai"` | 传输协议 |
-| `baseURL` | string | `http://localhost:11434/v1` | 本地端点根地址；留空按 `api` 自动选择 |
+| `baseURL` | string | `http://127.0.0.1:11434/v1` | 本地端点根地址；留空按 `api` 自动选择 |
 | `apiKey` | string | `""` | 本地服务需要鉴权时填写（如 LM Studio 的 key） |
 | `defaultModel` | string | `""` | 端点无法枚举模型时的兜底模型名 |
 | `contextWindow` | integer | `8192` | 默认上下文窗口（token） |
@@ -145,7 +145,7 @@ dsh plugin --profile web add dsh-local-model
 ┌─ 本地模型连接测试 ─────────────────────────────────┐
 │ provider: local · 名称: Local Model · 已配置: 是    │
 │ 协议  [ openai（OpenAI 兼容） ▾ ]                   │
-│ 端点  [ http://localhost:11434/v1 ]  [ 测试连接 ]   │
+│ 端点  [ http://127.0.0.1:11434/v1 ]  [ 测试连接 ]   │
 │ ✅ 连接成功，发现 4 个模型                           │
 │ (qwen3-coder:30b) (llama3.1:8b) …                   │
 └────────────────────────────────────────────────────┘
@@ -180,6 +180,19 @@ dsh plugin --profile web add dsh-local-model
 **Q：长对话被截断？**
 多数本地服务有自己的上下文上限（Ollama 默认 `num_ctx=4096`）。可以用环境变量放宽，例如
 `OLLAMA_CONTEXT_LENGTH=32768 ollama serve`，或改用长上下文模型（如 `devstral`）。
+
+**Q：「测试连接」报 `Failed to fetch`，但命令行 `curl` 明明能通？**
+这是 **`localhost` 的 IPv6 陷阱**：在部分环境下 `localhost` 会先解析到 IPv6 `::1`，
+而 Ollama 等本地服务通常只监听 IPv4 `127.0.0.1`，于是浏览器直连失败。
+
+本插件已内置两道防护：
+
+1. **探测默认走宿主进程**（`ctx.remote.llm.discoverModels()`）——由 Node 侧发起请求，
+   完全绕开浏览器的 CORS / IPv6 / Electron 网络策略；
+2. 默认地址一律用 **`127.0.0.1`** 而不是 `localhost`，并对回环地址做
+   `localhost ⇄ 127.0.0.1` 的自动兜底重试。
+
+如果你在配置里手写了 `localhost`，建议改成 `127.0.0.1`。
 
 ## 工作原理
 
@@ -250,14 +263,14 @@ dsh plugin --profile web add dsh-local-model
 ```
 
 Then, inside Harness: **Settings → Models** confirms the **Local Model** provider
-(default endpoint `http://localhost:11434/v1`), and you pick it from the session's model selector.
+(default endpoint `http://127.0.0.1:11434/v1`), and you pick it from the session's model selector.
 
 ### Config
 
 | Field | Default | Description |
 | --- | --- | --- |
 | `api` | `"openai"` | `"openai"` (OpenAI-compatible) or `"ollama"` (native) |
-| `baseURL` | `http://localhost:11434/v1` | Local endpoint root |
+| `baseURL` | `http://127.0.0.1:11434/v1` | Local endpoint root |
 | `apiKey` | `""` | Optional auth key required by your local server |
 | `defaultModel` | `""` | Fallback model id when the endpoint lists none |
 | `contextWindow` | `8192` | Default context window (tokens) |

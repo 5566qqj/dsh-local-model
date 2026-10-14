@@ -23,4 +23,12 @@
   并列出可用模型。手写 Lazy-CJS bundle，零打包依赖。
 - **热更新**：配置字段全部 volatile，修改后无需重启。
 
+### 修复
+
+- **`Failed to fetch`（localhost / IPv6 陷阱）**：客户端「测试连接」改为**优先经宿主进程探测**
+  （`ctx.remote.llm.discoverModels`），绕开浏览器的 CORS / IPv6 / Electron 网络限制；
+  默认端点由 `localhost` 改为 `127.0.0.1`，并对回环地址做 `localhost ⇄ 127.0.0.1` 兜底重试。
+- **模型发现吞异常**：`registerModelDiscovery` 不再把失败静默成空列表，
+  失败原因会经 Remote 信封回到界面。
+
 [1.0.0]: https://github.com/songzhiyin/dsh-local-model/releases/tag/v1.0.0
