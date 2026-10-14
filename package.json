@@ -1,0 +1,72 @@
+{
+  "name": "dsh-local-model",
+  "version": "1.0.0",
+  "description": "让 DeepSeek Harness 直连本地模型：兼容 OpenAI 协议（llama.cpp / LM Studio / vLLM / Ollama 的 /v1）与 Ollama 原生 API。无需登录、不消耗账号 token。",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "cordis",
+    "local-model",
+    "local-llm",
+    "ollama",
+    "llama.cpp",
+    "lm-studio",
+    "vllm",
+    "openai-compatible",
+    "llm-adapter"
+  ],
+  "author": "your-github-username",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-github-username/dsh-local-model.git"
+  },
+  "homepage": "https://github.com/your-github-username/dsh-local-model#readme",
+  "bugs": {
+    "url": "https://github.com/your-github-username/dsh-local-model/issues"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "icon": "icon.svg",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./package.json": "./package.json",
+    "./cordis.patch.yml": "./cordis.patch.yml"
+  },
+  "files": [
+    "lib",
+    "icon.svg",
+    "cordis.patch.yml",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20.0.0",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "compatibility": {
+      "dshReleases": {
+        "0.2.0-rc.2": "compatible"
+      }
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-llm": "^0.2.0-rc.2",
+    "@deepseek-ai/schemastery": "^3.18.1"
+  }
+}
